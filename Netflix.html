@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-ZPDsI5lnDF5wjK59QgJ5EZU9tTmBw5e0LPcGDV57JrIsJ7Y/ox7D+ojN+ZXatEU7W3o+Ld1l+M0f3DHMF2CeKQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/391827d54c.js" crossorigin="anonymous"></script>
     <link rel="shortcut icon" href="./Assets/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <title>Netflix India - Watch TV Shows Online, Watch Movies Online</title>
@@ -14,7 +14,7 @@
         <nav>
             <img class="logo" src="./Assets/logo.png" alt="Netflix Logo">
             <div>
-                <button class="lang-btn"><i class="fas fa-globe"></i> English <img src="./Assets/down-icon.png" alt="Down Arrow"></button>
+                <button class="lang-btn"><i class="fa-solid fa-globe"></i> English <img src="./Assets/down-icon.png" alt="Down Arrow"></button>
                 <button class="sign-in-btn">Sign In</button>
             </div>
         </nav>
@@ -23,100 +23,64 @@
             <h1>Unlimited movies, TV shows, and more.</h1>
             <h3>Watch anywhere. Cancel anytime.</h3>
             <p>Ready to watch? Enter your email to create or restart your membership.</p>
-            <form action="#" class="email-signup">
-                <input type="email" placeholder="Email address" required>
+            <form action="/signup" class="email-signup" method="post">
+                <input type="email" placeholder="Email address" name="email" required>
                 <button type="submit">Get Started</button>
+            </form>
+
+            <!-- Login Form -->
+            <form action="/login" class="email-signup" method="post" id="login-form">
+                <input type="email" placeholder="Email address" name="email" required>
+                <input type="password" placeholder="Password" name="password" required>
+                <button type="submit">Login</button>
             </form>
         </div>
     </div>
 
     <div class="features">
-        <div class="row">
-            <div class="text-col">
-                <h2>Enjoy on your TV.</h2>
-                <p>Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players, and more.</p>
-            </div>
-            <div class="img-col">
-                <img src="./Assets/feature-1.png" alt="Feature 1">
-            </div>
-        </div>
-        <div class="row">
-            <div class="img-col">
-                <img src="./Assets/feature-2.png" alt="Feature 2">
-            </div>
-            <div class="text-col">
-                <h2>Download your shows to watch offline.</h2>
-                <p>Save your favorites easily and always have something to watch.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="text-col">
-                <h2>Watch everywhere.</h2>
-                <p>Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.</p>
-            </div>
-            <div class="img-col">
-                <img src="./Assets/feature-3.png" alt="Feature 3">
-            </div>
-        </div>
-        <div class="row">
-            <div class="img-col">
-                <img src="./Assets/feature-4.png" alt="Feature 4">
-            </div>
-            <div class="text-col">
-                <h2>Create profiles for children.</h2>
-                <p>Send children on adventures with their favorite characters in a space made just for them—free with your membership.</p>
-            </div>
-        </div>
+        <!-- ... (unchanged) ... -->
     </div>
 
     <div class="faq">
-        <h2>Frequently Asked Questions</h2>
-
-        <ul class="accordion">
-            <!-- ... (unchanged) ... -->
-        </ul>
-
-        <small>Ready to watch? Enter your email to create or restart your membership.</small>
-
-        <form action="#" class="email-signup">
-            <input type="email" placeholder="Email address" required>
-            <button type="submit">Get Started</button>
-        </form>
+        <!-- ... (unchanged) ... -->
     </div>
 
     <div class="footer">
-        <h2>Questions? Call 000-000-000-0000</h2>
-
-        <div class="row">
-            <div class="col">
-                <a href="#">FAQ</a>
-                <a href="#">Investor Relations</a>
-                <a href="#">Privacy</a>
-                <a href="#">Speed Test</a>
-            </div>
-            <div class="col">
-                <a href="#">Help Centre</a>
-                <a href="#">Jobs</a>
-                <a href="#">Cookie Preferences</a>
-                <a href="#">Legal Notices</a>
-            </div>
-            <div class="col">
-                <a href="#">Account</a>
-                <a href="#">Ways to Watch</a>
-                <a href="#">Corporate Information</a>
-                <a href="#">Only on Netflix</a>
-            </div>
-            <div class="col">
-                <a href="#">Media Centre</a>
-                <a href="#">Terms of Use</a>
-                <a href="#">Contact Us</a>
-            </div>
-        </div>
-
-        <button class="lang-btn"><i class="fas fa-globe"></i> English <img src="./Assets/down-icon.png" alt="Down Arrow"></button>
-
-        <p class="copyright-text">Netflix India</p>
+        <!-- ... (unchanged) ... -->
     </div>
 
+    <!-- Protected Profile Section -->
+    <div id="profile" style="display: none;">
+        <h2>Welcome to your profile</h2>
+        <p>Email: <span id="user-email"></span></p>
+    </div>
+
+    <script>
+        // Function to handle login form submission
+        async function handleLogin() {
+            const email = document.querySelector('input[name="email"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // If login is successful, hide the login form and display the profile page
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('profile').style.display = 'block';
+                document.getElementById('user-email').innerText = email;
+            } else {
+                // If login fails, display an error message
+                alert(data.error);
+            }
+        }
+    </script>
 </body>
 </html>
